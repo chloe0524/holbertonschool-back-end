@@ -5,10 +5,16 @@ import json
 import requests
 import sys
 
-
 def hell_api():
     """ahfjhwdf"""
-    url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
+    if len(sys.argv) < 2:
+        return
+    try:
+        user_id = int(sys.argv[1])
+    except ValueError:
+        return
+
+    url_users = 'https://jsonplaceholder.typicode.com/users/' + str(user_id)
 
     response = requests.get(url_users)
     if (response.ok):
@@ -18,7 +24,7 @@ def hell_api():
         response.raise_for_status()
 
     url_todos = "https://jsonplaceholder.typicode.com/todos"
-    query = {'userId': sys.argv[1]}
+    query = {'userId': str(user_id)}
 
     response = requests.get(url_todos, params=query)
     if (response.ok):
