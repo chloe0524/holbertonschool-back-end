@@ -5,16 +5,10 @@ import json
 import requests
 import sys
 
+
 def hell_api():
     """ahfjhwdf"""
-    if len(sys.argv) < 2:
-        return
-    try:
-        user_id = int(sys.argv[1])
-    except ValueError:
-        return
-
-    url_users = 'https://jsonplaceholder.typicode.com/users/' + str(user_id)
+    url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
     response = requests.get(url_users)
     if (response.ok):
@@ -24,24 +18,21 @@ def hell_api():
         response.raise_for_status()
 
     url_todos = "https://jsonplaceholder.typicode.com/todos"
-    query = {'userId': str(user_id)}
+    query = {'userId': sys.argv[1]}
 
     response = requests.get(url_todos, params=query)
     if (response.ok):
         jData = json.loads(response.content)
         TOTAL_NUMBER_OF_TASKS = len(jData)
 
-        NUMBER_OF_DONE_TASKS = 0
-        for todo in jData:
-            if todo["completed"] is True:
-                NUMBER_OF_DONE_TASKS += 1
+        NUMBER_OF_DONE_TASKS = [todo for todo in jData if todo
+                                ["completed"] is True]
 
         print("Employee " + EMPLOYEE_NAME + " is done with tasks(" +
-              str(NUMBER_OF_DONE_TASKS) +
+              str(len(NUMBER_OF_DONE_TASKS)) +
               "/" + str(TOTAL_NUMBER_OF_TASKS) + ")")
-        for todo in jData:
-            if todo["completed"] is True:
-                print("\t " + todo["title"])
+        for todo in NUMBER_OF_DONE_TASKS:
+            print("\t " + todo["title"])
     else:
         response.raise_for_status()
 
