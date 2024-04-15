@@ -1,40 +1,47 @@
 #!/usr/bin/python3
 """task:0 gather data from an API"""
 
-import json
 import requests
 import sys
 
 
 if __name__ == "__main__":
     """ahfjhwdf"""
-    url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
+    if len(sys.argv) < 2:
+        print("wrong")
+        sys.exit(1)
 
-    response = requests.get(url_users)
-    if (response.ok):
-        jData = json.loads(response.content)
-        EMPLOYEE_NAME = jData["name"]
-    else:
+    user_id = sys.argv[1]
+    url_users = 'https://jsonplaceholder.typicode.com/users/' + user_id
+
+    try:
+        response = requests.get(url_users)
         response.raise_for_status()
+        user = response.json()
+        EMPLOYEE_NAME = user["name"]
+    except requests.exceptions.RequestException as e:
+        print("Error: {}".format(e))
+        sys.exit(1)
 
     url_todos = "https://jsonplaceholder.typicode.com/todos"
-    query = {'userId': sys.argv[1]}
+    query = {'userId': user_id}
 
-    response = requests.get(url_todos, params=query)
-    if (response.ok):
-        jData = json.loads(response.content)
-        TOTAL_NUMBER_OF_TASKS = len(jData)
+    try:
+        response = requests.get(url_todos, params=query)
+        response.raise_for_status()
+        todos = response.json()
+        TOTAL_NUMBER_OF_TASKS = len(todos)
 
         NUMBER_OF_DONE_TASKS = 0
-        for todo in jData:
+        for todo in todos:
             if todo["completed"] is True:
                 NUMBER_OF_DONE_TASKS += 1
 
-        print("Employee " + EMPLOYEE_NAME + " is done with tasks(" +
-              str(NUMBER_OF_DONE_TASKS) +
-              "/" + str(TOTAL_NUMBER_OF_TASKS) + ")")
-        for todo in jData:
+        print("Employee {} is done with tasks({}/{})".format(
+            EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
+        for todo in todos:
             if todo["completed"] is True:
-                print("\t " + todo["title"])
-    else:
-        response.raise_for_status()
+                print("\t {}".format(todo["title"]))
+    except requests.exceptions.RequestException as e:
+        print("{}".format(e))
+        sys.exit(1)
