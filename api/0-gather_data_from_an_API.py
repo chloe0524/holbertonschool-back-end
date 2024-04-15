@@ -6,14 +6,14 @@ import requests
 import sys
 
 
-if __name__ == "__main__":
+def hell_api():
     """ahfjhwdf"""
     url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
     response = requests.get(url_users)
-    if response.ok:
+    if (response.ok):
         jData = json.loads(response.content)
-        name = jData["name"]
+        EMPLOYEE_NAME = jData["name"]
     else:
         response.raise_for_status()
 
@@ -23,17 +23,22 @@ if __name__ == "__main__":
     response = requests.get(url_todos, params=query)
     if (response.ok):
         jData = json.loads(response.content)
-        nb_tasks = len(jData)
+        TOTAL_NUMBER_OF_TASKS = len(jData)
 
-        completed = 0
+        NUMBER_OF_DONE_TASKS = 0
         for todo in jData:
             if todo["completed"] is True:
-                completed += 1
+                NUMBER_OF_DONE_TASKS += 1
 
-        print("Employee " + name + " is done with tasks(" + str(completed) +
-              "/" + str(nb_tasks) + ")")
+        print("Employee " + EMPLOYEE_NAME + " is done with tasks(" +
+              str(NUMBER_OF_DONE_TASKS) +
+              "/" + str(TOTAL_NUMBER_OF_TASKS) + ")")
         for todo in jData:
             if todo["completed"] is True:
                 print("\t " + todo["title"])
     else:
         response.raise_for_status()
+
+
+if __name__ == "__main__":
+    hell_api()
