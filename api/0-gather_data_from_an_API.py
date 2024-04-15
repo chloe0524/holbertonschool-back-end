@@ -1,28 +1,46 @@
 #!/usr/bin/python3
-"""
-Script that, using REST API, for a given employee ID,
-returns information about his/her TODO list progress
-"""
+"""task:0 gather data from an API"""
+
 import requests
-from sys import argv
+import sys
+
 
 if __name__ == "__main__":
-    user_id = argv[1]
-    url = "https://jsonplaceholder.typicode.com/users/{}".format(user_id)
-    response = requests.get(url)
-    user = response.json()
-    EMPLOYEE_NAME = user.get("name")
+    if len(sys.argv) < 2:
+        print("wrong")
+        sys.exit(1)
 
-    url = "https://jsonplaceholder.typicode.com/todos?userId={}".format(
-        user_id)
-    response = requests.get(url)
-    todos = response.json()
+    user_id = sys.argv[1]
+    url_users = 'https://jsonplaceholder.typicode.com/users/' + user_id
 
-    TOTAL_NUMBER_OF_TASKS = len(todos)
-    NUMBER_OF_DONE_TASKS = [task for task
-                            in todos if task.get("completed") is True]
+    try:
+        response = requests.get(url_users)
+        response.raise_for_status()
+        user = response.json()
+        EMPLOYEE_NAME = user["name"]
+    except requests.exceptions.RequestException as e:
+        print("Error: {}".format(e))
+        sys.exit(1)
 
-    print("Employee {} is done with tasks({}/{}):".format(
-        EMPLOYEE_NAME, len(NUMBER_OF_DONE_TASKS), TOTAL_NUMBER_OF_TASKS))
-    for task in NUMBER_OF_DONE_TASKS:
-        print("\t {}".format(task.get("title")))
+    url_todos = "https://jsonplaceholder.typicode.com/todos"
+    query = {'userId': user_id}
+
+    try:
+        response = requests.get(url_todos, params=query)
+        response.raise_for_status()
+        todos = response.json()
+        TOTAL_NUMBER_OF_TASKS = len(todos)
+
+        NUMBER_OF_DONE_TASKS = 0
+        for todo in todos:
+            if todo["completed"] is True:
+                NUMBER_OF_DONE_TASKS += 1
+
+        print("Employee {} is done with tasks({}/{})".format(
+            EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
+        for todo in todos:
+            if todo["completed"] is True:
+                print("\t {}".format(todo["title"]))
+    except requests.exceptions.RequestException as e:
+        print("{}".format(e))
+        sys.exit(1)
