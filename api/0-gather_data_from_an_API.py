@@ -7,6 +7,7 @@ import sys
 
 
 def hell_api():
+    """ahfjhwdf"""
     url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
     response = requests.get(url_users)
