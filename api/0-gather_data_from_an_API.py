@@ -6,7 +6,7 @@ import requests
 import sys
 
 
-def hell_api():
+if __name__ == "__main__":
     """ahfjhwdf"""
     url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
@@ -32,7 +32,3 @@ def hell_api():
     for todo in jData:
         if todo.get("completed") is True:
             print("\t " + todo.get("title"))
-
-
-if __name__ == "__main__":
-    hell_api()
