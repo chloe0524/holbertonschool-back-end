@@ -24,11 +24,12 @@ def hell_api(user_id):
     if (response.ok):
         jData = json.loads(response.content)
 
-        with open("{}.csv".format(user_id), "w") as csv_file:
-            writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+        with open("{}.csv".format(user_id), "w", encoding='utf-8') as f:
+            csv_writer = csv.writer(f, quoting=csv.QUOTE_ALL)
             for task in jData:
-                writer.writerow([user_id, EMPLOYEE_NAME,
-                                 task.get("completed"), task.get("title")])
+                csv_writer.writerow([user_id, EMPLOYEE_NAME,
+                                    task.get("completed"),
+                                    task.get("title")])
     else:
         response.raise_for_status()
 
