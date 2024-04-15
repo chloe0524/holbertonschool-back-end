@@ -7,7 +7,7 @@ import sys
 import csv
 
 
-def hell_api():
+if __name__ == "__main__":
     url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
     response = requests.get(url_users)
@@ -36,7 +36,3 @@ def hell_api():
                 writer.writerow(row)
     else:
         response.raise_for_status()
-
-
-if __name__ == "__main__":
-    hell_api()
