@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 """task:1 extend your Python script to export data in the CSV format"""
 
+import csv
 import json
 import requests
 import sys
-import csv
 
 
-if __name__ == "__main__":
-    url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
+def hell_api(user_id):
+    url_users = 'https://jsonplaceholder.typicode.com/users/' + user_id
 
     response = requests.get(url_users)
     if (response.ok):
@@ -18,21 +18,20 @@ if __name__ == "__main__":
         response.raise_for_status()
 
     url_todos = "https://jsonplaceholder.typicode.com/todos"
-    query = {'userId': sys.argv[1]}
+    query = {'userId': user_id}
 
     response = requests.get(url_todos, params=query)
     if (response.ok):
         jData = json.loads(response.content)
 
-        csv_data = []
-        for todo in jData:
-            csv_data.append([sys.argv[1], EMPLOYEE_NAME, todo["completed"],
-                            todo["title"]])
-
-        filename = f"{sys.argv[1]}.csv"
-        with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-            for row in csv_data:
-                writer.writerow(row)
+        with open("{}.csv".format(user_id), "w") as csv_file:
+            writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+            for task in jData:
+                writer.writerow([user_id, EMPLOYEE_NAME,
+                                 task.get("completed"), task.get("title")])
     else:
         response.raise_for_status()
+
+
+if __name__ == "__main__":
+    hell_api(sys.argv[1])
