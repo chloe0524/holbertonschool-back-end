@@ -3,7 +3,6 @@
 
 import json
 import requests
-import sys
 
 
 def hell_api():
