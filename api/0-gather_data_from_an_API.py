@@ -5,32 +5,38 @@ import json
 import requests
 import sys
 
-url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
-response = requests.get(url_users)
-if (response.ok):
-    jData = json.loads(response.content)
-    name = jData["name"]
-else:
-    response.raise_for_status()
+def hell_api():
+    url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
-url_todos = "https://jsonplaceholder.typicode.com/todos"
-query = {'userId': sys.argv[1]}
+    response = requests.get(url_users)
+    if (response.ok):
+        jData = json.loads(response.content)
+        name = jData["name"]
+    else:
+        response.raise_for_status()
 
-response = requests.get(url_todos, params=query)
-if (response.ok):
-    jData = json.loads(response.content)
-    nb_tasks = len(jData)
+    url_todos = "https://jsonplaceholder.typicode.com/todos"
+    query = {'userId': sys.argv[1]}
 
-    completed = 0
-    for todo in jData:
-        if todo["completed"] is True:
-            completed += 1
+    response = requests.get(url_todos, params=query)
+    if (response.ok):
+        jData = json.loads(response.content)
+        nb_tasks = len(jData)
 
-    print("Employee " + name + " is done with tasks(" + str(completed) +
-          "/" + str(nb_tasks) + ")")
-    for todo in jData:
-        if todo["completed"] is True:
-            print("\t " + todo["title"])
-else:
-    response.raise_for_status()
+        completed = 0
+        for todo in jData:
+            if todo["completed"] is True:
+                completed += 1
+
+        print("Employee " + name + " is done with tasks(" + str(completed) +
+              "/" + str(nb_tasks) + ")")
+        for todo in jData:
+            if todo["completed"] is True:
+                print("\t " + todo["title"])
+    else:
+        response.raise_for_status()
+
+
+if __name__ == "__main__":
+    hell_api()
