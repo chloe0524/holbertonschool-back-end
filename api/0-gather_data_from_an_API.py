@@ -6,8 +6,7 @@ import requests
 import sys
 
 
-if __name__ == "__main__":
-    """ahfjhwdf"""
+def hell_api():
     url_users = 'https://jsonplaceholder.typicode.com/users/' + sys.argv[1]
 
     response = requests.get(url_users)
@@ -38,3 +37,7 @@ if __name__ == "__main__":
                 print("\t " + todo["title"])
     else:
         response.raise_for_status()
+
+
+if __name__ == "__main__":
+    hell_api()
